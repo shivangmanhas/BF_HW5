@@ -1,0 +1,44 @@
+---
+title: "Lecture 5"
+author: "shivangsingh.manhas@rutgers.edu"
+date: "10/25/2023"
+output: html_document
+---
+
+```{r}
+library(fpp)
+library(fpp2)
+
+#Importing dataset
+library(readxl)
+AirPassengers <- read_excel("~/Documents/AirPassengers.xlsx")
+View(AirPassengers)
+```
+
+```{r}
+passengers_ts <- ts(AirPassengers$Passengers, frequency = 12)
+plot(AirPassengers)
+stl_decomp <- stl(passengers_ts, s.window ="periodic")
+plot(stl_decomp)
+attributes(stl_decomp)
+```
+
+```{r}
+# Lets print out a seasonal adjustment
+seasadj(stl_decomp)
+
+plot(passengers_ts)
+lines(seasadj(stl_decomp), col="blue")
+
+f_stl <- forecast(stl_decomp,h=15)
+f_stl
+plot(f_stl)
+
+# Another way to do things
+decomp_elec <- decompose(passengers_ts)
+
+attributes(decomp_elec)
+seasadj(decomp_elec)
+```
+
+
